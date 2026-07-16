@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">f
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JVALU – ICV Document Status</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -407,6 +407,7 @@ code{background:#f0ece4;padding:2px 6px;border-radius:3px;font-family:monospace;
       <div><div class="f-lbl">Responsible Person</div><input class="inp" id="f-rp" placeholder="e.g. Ahmed Ali"></div>
       <div><div class="f-lbl">Financial Year (FY)</div><input class="inp" id="f-fy" placeholder="e.g. 2025"></div>
       <div><div class="f-lbl">ICV Expiry Date</div><input class="inp" type="date" id="f-exp"></div>
+      <div><div class="f-lbl">ICV Score</div><input class="inp" id="f-icv-score" placeholder="e.g. 78.4"></div>
       <div class="full">
         <div style="background:#f7f3ec;border:1px solid #e2c99a;border-radius:3px;padding:12px 14px;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
@@ -442,7 +443,7 @@ code{background:#f0ece4;padding:2px 6px;border-radius:3px;font-family:monospace;
 //  ★ CONFIG — EDIT THESE TWO LINES ONLY ★
 // ════════════════════════════════════════════════
 const ADMIN_PASSWORD = "jvalu2025";
-const SHEET_URL      = "https://script.google.com/macros/s/AKfycbz66vJpvUaeVRPpTlVlFRknn_1nmAEn6xSiigLWtsNvBZMW_mUh0p-qFWdHxAHOOR_p0A/exec";
+const SHEET_URL      = "https://script.google.com/macros/s/AKfycbx3pPJ6Z5l1IK7fIoaIXovyYzIVzgZc3-FPlgQg1pLRKWFo5PxRg964oEwPhePfZGK1Ww/exec";
 // ════════════════════════════════════════════════
 
 // ICV DOCUMENTS
@@ -497,6 +498,20 @@ function toISODate(v){
   const d=new Date(dateStr);
   if(isNaN(d)) return dateStr;
   return d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+}
+// Client-portal-only expiry display: plain date if >50 days away,
+// a highlighted day-count once within 50 days, and a highlighted
+// "Renew Certificate" notice once expired.
+function portalExpiryHTML(dateStr){
+  if(!dateStr) return `<span style="color:#888">—</span>`;
+  const exp=new Date(dateStr);
+  if(isNaN(exp)) return `<span style="color:#888">—</span>`;
+  const now=new Date();
+  const diff=Math.ceil((exp-now)/(1000*60*60*24));
+  const formatted=exp.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+  if(diff<0) return `${formatted} &nbsp;·&nbsp; <span style="color:#c0392b;font-weight:700">⚠ Renew Certificate</span>`;
+  if(diff<=50) return `${formatted} &nbsp;·&nbsp; <span style="color:#c0392b;font-weight:700">${diff} day${diff===1?"":"s"} left</span>`;
+  return formatted;
 }
 function isFollowUpDue(c){
   if(!c.expiryDate) return false;
@@ -798,6 +813,7 @@ function renderDetail(){
         <div><div class="f-lbl">Responsible Person</div><input class="inp" id="e-rp" value="${esc(c.responsible||'')}"></div>
         <div><div class="f-lbl">Financial Year</div><input class="inp" id="e-fy" value="${esc(c.financialYear||'')}"></div>
         <div><div class="f-lbl">ICV Expiry Date</div><input class="inp" type="date" id="e-exp" value="${esc(toISODate(c.expiryDate))}"></div>
+        <div><div class="f-lbl">ICV Score</div><input class="inp" id="e-icv-score" value="${esc(c.icvScore||'')}" placeholder="e.g. 78.4"></div>
         <div><div class="f-lbl">Stage</div><select class="inp" id="e-st">${stOpts}</select></div>
         <div style="grid-column:span 2;background:#f7f3ec;border:1px solid #e2c99a;border-radius:3px;padding:12px 14px;margin-top:4px">
           <div style="display:flex;align-items:center;gap:10px;${prevChecked?"margin-bottom:10px":""}">
@@ -846,6 +862,7 @@ async function saveClientEdits(){
   // Don't overwrite a saved expiry date with blank — only update if a value is present
   const expVal = document.getElementById("e-exp").value.trim();
   c.expiryDate = expVal || c.expiryDate || "";
+  c.icvScore  = document.getElementById("e-icv-score").value.trim();
   c.stage     = document.getElementById("e-st").value;
   c.prevICV   = document.getElementById("e-prev-icv").checked;
   c.prevIcvFy = document.getElementById("e-prev-fy").value.trim();
@@ -918,7 +935,7 @@ async function syncDocs(c){
 function openAddModal(){document.getElementById("add-modal").classList.add("open");}
 function closeAddModal(){
   document.getElementById("add-modal").classList.remove("open");
-  ["f-co","f-tl","f-ct","f-ph","f-em","f-rp","f-fy","f-exp","f-prev-fy","f-prev-score"].forEach(id=>document.getElementById(id).value="");
+  ["f-co","f-tl","f-ct","f-ph","f-em","f-rp","f-fy","f-exp","f-icv-score","f-prev-fy","f-prev-score"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("f-st").selectedIndex=0;
   document.getElementById("f-prev-icv").checked=false;
   document.getElementById("prev-icv-fields").style.display="none";
@@ -937,6 +954,7 @@ async function submitAdd(){
     responsible:document.getElementById("f-rp").value.trim(),
     financialYear:document.getElementById("f-fy").value.trim()||"2025",
     expiryDate:document.getElementById("f-exp").value.trim(),
+    icvScore:document.getElementById("f-icv-score").value.trim(),
     prevICV:document.getElementById("f-prev-icv").checked,
     prevIcvFy:document.getElementById("f-prev-fy").value.trim(),
     prevIcvScore:document.getElementById("f-prev-score").value.trim(),
@@ -1085,6 +1103,10 @@ const catRows=ICV_CATS.map(cat=>{
             Trade License: <b style="color:#1d4a45">${esc(c.tradeLicense)}</b>
             ${c.financialYear?`&nbsp;·&nbsp; FY: <b style="color:#1d4a45">${esc(c.financialYear)}</b>`:""}
             &nbsp;·&nbsp; Ref: <b style="color:#1d4a45">${esc(c.id)}</b>
+          </div>
+          <div style="font-size:12px;color:#888;margin-top:4px">
+            ICV Expiry: <b style="color:#1d4a45">${portalExpiryHTML(c.expiryDate)}</b>
+            ${c.icvScore?`&nbsp;·&nbsp; ICV Score: <b style="color:#1d4a45">${esc(c.icvScore)}</b>`:""}
           </div>
         </div>
         <div style="text-align:right">
