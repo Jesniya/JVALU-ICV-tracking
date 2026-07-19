@@ -1095,7 +1095,7 @@ function buildPortalResult(c){
   const pendMand=pendList.filter(d=>d.required).length;
 
   const alertBox=p.pct===100
-    ?`<div style="background:#d4edda;border:1px solid #b2d8b2;border-radius:4px;padding:12px 16px;color:#155724;font-size:13px;font-weight:600;margin-top:12px">✅ All documents received! Your file is being processed by our team.</div>`
+    ?`<div style="background:#d4edda;border:1px solid #b2d8b2;border-radius:4px;padding:12px 16px;color:#155724;font-size:13px;font-weight:600;margin-top:12px">${c.stage==="Certified"?"✅ Your ICV certificate has been successfully issued.":" ✅ All documents received! Your file is being processed by our team."}</div>`
     :pendMand>0
     ?`<div style="background:#fff3cd;border:1px solid #ffd966;border-radius:4px;padding:12px 16px;color:#856404;font-size:13px;margin-top:12px">⚠️ <b>${pendMand} mandatory document(s)</b> still pending. Please submit at your earliest convenience.</div>`
     :"";
