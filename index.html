@@ -587,6 +587,10 @@ function togglePrevICV(){
 function mkDocs(){const o={};ICV_DOCS.forEach(d=>{o[d.id]={received:false,date:"",remarks:""};});return o;}
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function getProg(docs, hasEmirati){const emiratiIds=[10,11,12,13,14,15];
+                                   const v=Object.values(docs);
+                                   if(hasEmirati===undefined){
+                                     const n=v.filter(d=>d.received).length;
+                                     return{received:n,total:v.length,pct:Math.round(n/v.length*100)};}
                                   const allDOcs=ICV_DOCS.filter(d=>hasEmirati||!emiratiIds.includes(d.id));
                                   const total=allDocs.length;
                                   const received=allDocs.filter(d=>docs[d.id]&&docs[d.id].received).length;
