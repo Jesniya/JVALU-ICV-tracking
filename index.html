@@ -1099,10 +1099,17 @@ async function portalSearch(){
 }
 
 function buildPortalResult(c){
-  const p=getProg(c.documents, c.hasEmirati);
-  const recvList=ICV_DOCS.filter(d=>c.documents[d.id]&&c.documents[d.id].received);
-  const emiratiIds=[10, 11, 12, 13, 14, 15];
-  const pendList=ICV_DOCS.filter(d=>!(c.documents[d.id]&&c.documents[d.id].received) && (c.hasEmirati||!emiratiIds.includes(d.id)));
+  const hasEm = c.hasEmirati===true||c.hasEmirati==="true"||c.hasEmirati==="TRUE"||c.hasEmirati==="1";
+const p=getProg(c.documents, hasEm);
+  const recvList=ICV_DOCS.filter(d=>
+  c.documents[d.id]&&c.documents[d.id].received&&
+  (hasEm||!emiratiIds.includes(d.id))
+);
+ const emiratiIds=[10,11,12,13,14,15];
+const pendList=ICV_DOCS.filter(d=>
+  !(c.documents[d.id]&&c.documents[d.id].received) &&
+  (hasEm||!emiratiIds.includes(d.id))
+);
   const remList=ICV_DOCS.filter(d=>c.documents[d.id]&&c.documents[d.id].remarks);
   const pc=p.pct===100?"#1e7e54":p.pct>=70?"#c9a96e":"#d4830a";
   const pendMand=pendList.filter(d=>d.required).length;
