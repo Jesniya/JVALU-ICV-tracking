@@ -586,7 +586,12 @@ function togglePrevICV(){
 }
 function mkDocs(){const o={};ICV_DOCS.forEach(d=>{o[d.id]={received:false,date:"",remarks:""};});return o;}
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-function getProg(docs){const v=Object.values(docs);const n=v.filter(d=>d.received).length;return{received:n,total:v.length,pct:Math.round(n/v.length*100)};}
+function getProg(docs, hasEmirati){const emiratiIds=[10,11,12,13,14,15];
+                                  const allDOcs=ICV_DOCS.filter(d=>hasEmirati||!emiratiIds.includes(d.id));
+                                  const total=allDocs.length;
+                                  const received=allDocs.filter(d=>docs[d.id]&&docs[d.id].received).length;
+                                  return{received,total,pct:total===0?0:Math.round(received/total*100)};
+                                  }
 function showToast(msg,col="#1d4a45"){const t=document.getElementById("toast");t.textContent=msg;t.style.background=col;t.style.display="block";setTimeout(()=>t.style.display="none",2600);}
 function setSS(msg){document.getElementById("sync-status").textContent=msg;}
 
@@ -1087,9 +1092,10 @@ async function portalSearch(){
 }
 
 function buildPortalResult(c){
-  const p=getProg(c.documents);
+  const p=getProg(c.documents, c.hasEmirati);
   const recvList=ICV_DOCS.filter(d=>c.documents[d.id]&&c.documents[d.id].received);
-  const pendList=ICV_DOCS.filter(d=>!(c.documents[d.id]&&c.documents[d.id].received));
+  const emiratiIds=[10, 11, 12, 13, 14, 15];
+  const pendList=ICV_DOCS.filter(d=>!(c.documents[d.id]&&c.documents[d.id].received) && (c.hasEmirati||!emiratiIds.includes(d.id)));
   const remList=ICV_DOCS.filter(d=>c.documents[d.id]&&c.documents[d.id].remarks);
   const pc=p.pct===100?"#1e7e54":p.pct>=70?"#c9a96e":"#d4830a";
   const pendMand=pendList.filter(d=>d.required).length;
