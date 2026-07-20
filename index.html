@@ -1231,13 +1231,21 @@ const catRows=ICV_CATS.map(cat=>{
 // ════════════════════════════════════════
 function downloadSummary(c){
   ICV_DOCS.forEach(d=>{if(!c.documents[d.id])c.documents[d.id]={received:false,date:"",remarks:""};});
-  const p=getProg(c.documents);
-  const recvList=ICV_DOCS.filter(d=>c.documents[d.id]&&c.documents[d.id].received);
-  const pendMand=ICV_DOCS.filter(d=>d.required&&!(c.documents[d.id]&&c.documents[d.id].received));
+ const emiratiIds=[10,11,12,13,14,15];
+const hasEm=c.hasEmirati===true||c.hasEmirati==="true"||c.hasEmirati==="TRUE"||c.hasEmirati==="1";
+const p=getProg(c.documents,hasEm);
+const recvList=ICV_DOCS.filter(d=>
+  c.documents[d.id]&&c.documents[d.id].received&&
+  (hasEm||!emiratiIds.includes(d.id))
+);
+const pendMand=ICV_DOCS.filter(d=>
+  d.required&&!(c.documents[d.id]&&c.documents[d.id].received)&&
+  (hasEm||!emiratiIds.includes(d.id))
+);
   const remList=ICV_DOCS.filter(d=>c.documents[d.id]&&c.documents[d.id].remarks);
   const now=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"});
 
-  const catSections=ICV_CATS.map(cat=>`
+  const catSections=ICV_CATS.filter(cat=>hasEm||!cat.cat.includes("Emirati")).map(cat=>`
     <div style="margin-bottom:18px">
       <div style="background:#1d4a45;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase">${cat.cat}</div>
       <table style="width:100%;border-collapse:collapse">
