@@ -1245,7 +1245,14 @@ const pendMand=ICV_DOCS.filter(d=>
   const remList=ICV_DOCS.filter(d=>c.documents[d.id]&&c.documents[d.id].remarks);
   const now=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"});
 
-  const catSections=ICV_CATS.filter(cat=>hasEm||!cat.cat.includes("Emirati")).map(cat=>`
+const catSections=ICV_CATS.map(cat=>{
+  if(cat.cat.includes("Emirati")&&!hasEm){
+    return `<div style="margin-bottom:18px">
+      <div style="background:#1d4a45;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase">${cat.cat}</div>
+      <div style="padding:12px 14px;color:#aaa;font-size:13px;background:#f9f9f9;border:1px solid #eee">— No Emirati Employees</div>
+    </div>`;
+  }
+  return `
     <div style="margin-bottom:18px">
       <div style="background:#1d4a45;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase">${cat.cat}</div>
       <table style="width:100%;border-collapse:collapse">
@@ -1267,7 +1274,8 @@ const pendMand=ICV_DOCS.filter(d=>
           }).join("")}
         </tbody>
       </table>
-    </div>`).join("");
+    </div>`;
+}).join("");
 
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
     <title>ICV Summary – ${esc(c.company)}</title>
