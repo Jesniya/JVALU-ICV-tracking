@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">f
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JVALU – ICV Document Status</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -35,7 +35,7 @@ input,select,textarea,button{font-family:inherit}
 .topbar-contact b{color:#e2c99a}
 #portal-body{padding-top:56px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:40px}
 .portal-center{width:100%;max-width:600px;padding:0 20px;text-align:center}
-.portal-icon{width:72px;height:72px;background:#0e2e2a;border:2px solid #c9a96e;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 24px}
+
 .portal-title{font-size:32px;font-weight:800;color:#0e2e2a;margin-bottom:8px;line-height:1.15}
 .portal-title span{color:#c9a96e}
 .portal-sub{font-size:14px;color:#888;margin-bottom:36px;line-height:1.7}
@@ -296,7 +296,7 @@ code{background:#f0ece4;padding:2px 6px;border-radius:3px;font-family:monospace;
     </div>
   </div>
   <div id="portal-topbar">
-    <div class="logo-wrap">
+   <div class="logo-wrap">
   <div>
     <div style="color:#fff;font-weight:800;font-size:28px;letter-spacing:4px;line-height:1">JVALU</div>
     <div style="color:#c9a96e;font-size:9px;letter-spacing:4px;text-transform:uppercase;margin-top:3px">Certification &amp; Evaluation</div>
@@ -309,22 +309,38 @@ code{background:#f0ece4;padding:2px 6px;border-radius:3px;font-family:monospace;
 
   <div id="portal-body">
     <div class="portal-center">
-      <div class="portal-icon">🔍</div>
-      <div class="portal-title">Check Your <span>ICV Documents</span></div>
-      <div class="portal-sub">
-        Enter your company name or trade license number below<br>
-        to instantly view your document submission status.
-      </div>
+     <div style="display:inline-block;background:#c9a96e;width:48px;height:3px;border-radius:2px;margin-bottom:20px"></div>
+<div class="portal-title">Check Your <span>ICV Documents</span></div>
+<div class="portal-sub">
+  Enter your company Trade license number below<br>
+  to instantly view your document submission status.
+</div>
 
       <div class="search-wrap">
         <div class="search-label">Search Your File</div>
-        <div class="search-row">
+        <!-- <div class="search-row">
           <input class="s-inp" id="portal-inp"
-            placeholder="Company name or Trade License No..."
+            placeholder="Company Trade License No..."
             onkeydown="if(event.key==='Enter')portalSearch()">
           <button class="s-btn" onclick="portalSearch()">Search</button>
         </div>
-        <div class="search-hint">e.g. "Gulf Construction" or "CN-1023847"</div>
+        <div class="search-hint">e.g."CN-1023847"</div> -->
+        <div class="search-row">
+  <input class="s-inp" id="portal-inp"
+    placeholder="Trade License No. (e.g. CN-1023847)"
+    onkeydown="if(event.key==='Enter')portalSearch()">
+</div>
+<div style="margin-top:10px">
+  <input class="s-inp" id="portal-ref"
+    placeholder="Reference No. (e.g. C77125)"
+    onkeydown="if(event.key==='Enter')portalSearch()"
+    style="width:100%">
+</div>
+<div style="margin-top:10px">
+  <button class="s-btn" onclick="portalSearch()" style="width:100%">Search</button>
+</div>
+<div class="search-hint">Enter your Trade License and Reference number to access your file.</div>
+<div id="lockout-msg" style="display:none;margin-top:10px;color:#c0392b;font-size:13px;font-weight:600;background:#fde8e6;padding:10px 14px;border-radius:4px"></div>
         <div class="s-spinner" id="portal-spinner">🔍 Searching your records...</div>
         <div class="s-err" id="portal-err">
           No records found. Please check your details or contact JVALU at <b>02 6413666</b>.
@@ -352,7 +368,7 @@ code{background:#f0ece4;padding:2px 6px;border-radius:3px;font-family:monospace;
 <div id="admin-screen">
   <div id="admin-login">
     <div class="login-box">
-     <div style="margin-bottom:16px">
+    <div style="margin-bottom:16px">
   <div style="color:#0e2e2a;font-weight:800;font-size:32px;letter-spacing:4px;line-height:1">JVALU</div>
   <div style="color:#c9a96e;font-size:9px;letter-spacing:4px;text-transform:uppercase;margin-top:3px">Certification &amp; Evaluation</div>
 </div>
@@ -471,7 +487,7 @@ code{background:#f0ece4;padding:2px 6px;border-radius:3px;font-family:monospace;
 //  ★ CONFIG — EDIT THESE TWO LINES ONLY ★
 // ════════════════════════════════════════════════
 const ADMIN_PASSWORD = "jvalu2025";
-const SHEET_URL      = "https://script.google.com/macros/s/AKfycbwyBQLMkfENYb7hhG8iC12kiJKpiMnDVMn2Flo2Rf39jawqGy1CeA5aEF3T7xLel3lEBw/exec";
+const SHEET_URL      = "https://script.google.com/macros/s/AKfycbwnPatmD1dUIF-hoKo9c_-9Ch3A7QvxQziQZpxOHNnOCjqbt997cQ-xWn05iJM95moC/exec";
 // ════════════════════════════════════════════════
 
 // ICV DOCUMENTS
@@ -479,15 +495,15 @@ const ICV_CATS = [
   { cat:"1. Company Legal & Registration", color:"#1d4a45", docs:[
     {id:1,  name:"Renewed Trade License (Valid)",                           required:true },
     {id:2,  name:"Valid VAT Certificate",                                   required:true },
-    {id:3,  name:"Company Tenancy Contract for FY ",    required:true },
+    {id:3,  name:"Company Tenancy Contract for (FY)",    required:true },
     {id:4,  name:"Memorandum of Association (MOA)",                         required:true },
     {id:5,  name:"Power of Attorney (POA)",                                 required:true },
     {id:6,  name:"Emirates ID & Passport – Owner & Authorized Signatory",  required:true },
   ]},
   { cat:"2. Human Resources & Payroll", color:"#2a6b63", docs:[
     {id:7,  name:"MOHRE Employee List (MOL List) – Latest",                 required:true },
-    {id:8,  name:"Complete SIF File for FY",                              required:true },
-    {id:9,  name:"Salary Payment Proofs – All 12 Months of FY",          required:true },
+    {id:8,  name:"Complete SIF File for (FY)",                              required:true },
+    {id:9,  name:"Salary Payment Proofs – All 12 Months of (FY)",          required:true },
   ]},
   { cat:"3. Emirati Employees", color:"#856404", docs:[
     {id:10, name:"Emirates ID (Emirati Employee)",                          required:false},
@@ -498,10 +514,10 @@ const ICV_CATS = [
     {id:15, name:"Pension Invoices with Payment Proofs",                    required:false},
   ]},
   { cat:"4. Financial Records", color:"#0c5460", docs:[
-    {id:16, name:"Financial Audit Report for FY (Signed)",               required:true },
+    {id:16, name:"Financial Audit Report for (FY) (Signed)",               required:true },
     {id:17, name:"Complete Asset Ledger (Up to Date)",                      required:true },
-    {id:18, name:"Third-Party Supplier Ledger for FY",                    required:true },
-    {id:19, name:"Complete Bank Statement for FY",                        required:true },
+    {id:18, name:"Third-Party Supplier Ledger for (FY)",                    required:true },
+    {id:19, name:"Complete Bank Statement for (FY)",                        required:true },
     {id:20, name:"Full VAT Filing Report with Breakdown (Excel)",           required:true },
     {id:21, name:"Corporate Tax Working Sheets (Excel)",                    required:true },
   ]},
@@ -1027,43 +1043,82 @@ function isCertExpired(dateStr){
 }
 function showRenewReminder(){document.getElementById("renew-modal").classList.add("open");}
 function closeRenewReminder(){document.getElementById("renew-modal").classList.remove("open");}
+// ── Brute-force protection ──────────────────────────────────────────────
+const MAX_ATTEMPTS = 3;
+const LOCK_DURATION = 10 * 60 * 1000; // 10 minutes in ms
+
+function isLockedOut(){
+  const lock = JSON.parse(localStorage.getItem("jvalu_lockout")||"{}");
+  if(!lock.until) return false;
+  if(Date.now() < lock.until) return true;
+  localStorage.removeItem("jvalu_lockout");
+  return false;
+}
+function getLockoutMsg(){
+  const lock = JSON.parse(localStorage.getItem("jvalu_lockout")||"{}");
+  const mins = Math.ceil((lock.until - Date.now()) / 60000);
+  return `Too many failed attempts. Please try again in ${mins} minute${mins===1?"":"s"}.`;
+}
+function recordFailedAttempt(){
+  const key = "jvalu_attempts";
+  let attempts = parseInt(localStorage.getItem(key)||"0") + 1;
+  if(attempts >= MAX_ATTEMPTS){
+    localStorage.setItem("jvalu_lockout", JSON.stringify({until: Date.now() + LOCK_DURATION}));
+    localStorage.removeItem(key);
+  } else {
+    localStorage.setItem(key, String(attempts));
+  }
+  return attempts;
+}
+function clearFailedAttempts(){
+  localStorage.removeItem("jvalu_attempts");
+  localStorage.removeItem("jvalu_lockout");
+}
+
 async function portalSearch(){
-  const raw=document.getElementById("portal-inp").value.trim();
-  if(!raw){
-    document.getElementById("portal-err").style.display="block";
-    document.getElementById("portal-err").textContent="Please enter a company name or trade license number.";
+  const lockMsg = document.getElementById("lockout-msg");
+
+  // Check lockout first
+  if(isLockedOut()){
+    lockMsg.style.display="block";
+    lockMsg.textContent = getLockoutMsg();
     return;
   }
-  const q=raw.toLowerCase();
-  const qStripped=q.replace(/[\s\-_\.\/]/g,"");
+
+  const tlRaw = (document.getElementById("portal-inp").value||"").trim();
+  const refRaw = (document.getElementById("portal-ref").value||"").trim();
+
+  if(!tlRaw || !refRaw){
+    document.getElementById("portal-err").style.display="block";
+    document.getElementById("portal-err").textContent="Please enter both your Trade License number and Reference number.";
+    return;
+  }
+
+  // Exact match only — strip spaces/dashes for comparison
+  const tlClean = tlRaw.replace(/[\s\-_\.\/]/g,"").toLowerCase();
+  const refClean = refRaw.replace(/[\s\-_\.\/]/g,"").toLowerCase();
 
   document.getElementById("portal-err").style.display="none";
   document.getElementById("result-area").innerHTML="";
   document.getElementById("portal-spinner").style.display="block";
+  lockMsg.style.display="none";
 
   let allClients=[];
-  let dataSource="none";
 
-  // 1. Try Google Sheets first (live data — works for all users)
-  if(true){
-    try{
-      const res=await fetch(`${SHEET_URL}?action=getAll&_=${Date.now()}`);
-      const data=await res.json();
-      if(data.success && data.clients && data.clients.length>0){
-        allClients=data.clients;
-        dataSource="sheets";
-      }
-    }catch(e){ /* fall through */ }
-  }
+  // Try Google Sheets first
+  try{
+    const res = await fetch(`${SHEET_URL}?action=getAll&_=${Date.now()}`);
+    const data = await res.json();
+    if(data.success && data.clients && data.clients.length>0){
+      allClients = data.clients;
+    }
+  }catch(e){}
 
-  // 2. Fallback to localStorage (only works on same browser as admin)
+  // Fallback to localStorage
   if(allClients.length===0){
     try{
-      const s=localStorage.getItem("jvalu_clients");
-      if(s){
-        allClients=JSON.parse(s);
-        dataSource="local";
-      }
+      const s = localStorage.getItem("jvalu_clients");
+      if(s) allClients = JSON.parse(s);
     }catch(e){}
   }
 
@@ -1071,37 +1126,42 @@ async function portalSearch(){
 
   if(allClients.length===0){
     document.getElementById("portal-err").style.display="block";
-    document.getElementById("portal-err").innerHTML=
-      `No records found in our system. Please contact JVALU at <b>02 6413666</b> or <b>Support@jvalu.ae</b> to verify your details.`;
+    document.getElementById("portal-err").innerHTML=`No records found. Please contact JVALU at <b>02 6413666</b>.`;
     return;
   }
 
-  // Smart matching: company name OR trade license (flexible matching)
-  const found=allClients.find(c=>{
-    const companyLow=(c.company||"").toLowerCase();
-    const tlLow=(c.tradeLicense||"").toLowerCase();
-    const tlStripped=tlLow.replace(/[\s\-_\.\/]/g,"");
-    const companyMatch=companyLow.includes(q)||q.includes(companyLow.substring(0,Math.min(6,companyLow.length)));
-    const tlMatch=tlStripped.includes(qStripped)||qStripped.includes(tlStripped);
-    return companyMatch||tlMatch;
+  // EXACT match on TL + Reference number
+  const found = allClients.find(c=>{
+    const tlMatch = (c.tradeLicense||"").replace(/[\s\-_\.\/]/g,"").toLowerCase() === tlClean;
+    const refMatch = (c.id||"").replace(/[\s\-_\.\/]/g,"").toLowerCase() === refClean;
+    return tlMatch && refMatch;
   });
 
   if(found){
+    clearFailedAttempts();
     ICV_DOCS.forEach(d=>{if(!found.documents[d.id])found.documents[d.id]={received:false,date:"",remarks:""};});
     document.getElementById("portal-body").style.justifyContent="flex-start";
     document.getElementById("portal-body").style.paddingTop="72px";
     document.getElementById("result-area").innerHTML=buildPortalResult(found);
     document.getElementById("result-area").scrollIntoView({behavior:"smooth",block:"start"});
-    if(isCertExpired(found.expiryDate)) showRenewReminder();
   } else {
+    const attempts = recordFailedAttempt();
     document.getElementById("portal-err").style.display="block";
-    document.getElementById("portal-err").innerHTML=
-      `No file found matching "<b>${esc(raw)}</b>". Please check your company name or trade license number. Contact JVALU at <b>02 6413666</b> or <b>Support@jvalu.ae</b> for help.`;
+    if(isLockedOut()){
+      document.getElementById("portal-err").style.display="none";
+      lockMsg.style.display="block";
+      lockMsg.textContent = getLockoutMsg();
+    } else {
+      const remaining = MAX_ATTEMPTS - attempts;
+      document.getElementById("portal-err").innerHTML=
+        `No matching record found. Please check your Trade License and Reference number.<br>
+        <span style="font-size:12px;color:#c0392b">⚠ ${remaining} attempt${remaining===1?"":"s"} remaining before temporary lockout.</span>`;
+    }
   }
 }
 
 function buildPortalResult(c){
-   const emiratiIds=[10,11,12,13,14,15];
+const emiratiIds=[10,11,12,13,14,15];
   const hasEm=c.hasEmirati===true||c.hasEmirati==="true"||c.hasEmirati==="TRUE"||c.hasEmirati==="1";
   const p=getProg(c.documents,hasEm);
   const recvList=ICV_DOCS.filter(d=>
@@ -1116,8 +1176,8 @@ function buildPortalResult(c){
   const pc=p.pct===100?"#1e7e54":p.pct>=70?"#c9a96e":"#d4830a";
   const pendMand=pendList.filter(d=>d.required).length;
 
-  const alertBox=p.pct===100
-    ?`<div style="background:#d4edda;border:1px solid #b2d8b2;border-radius:4px;padding:12px 16px;color:#155724;font-size:13px;font-weight:600;margin-top:12px">${c.stage==="Certified"?"✅ Your ICV certificate has been successfully issued.":" ✅ All documents received! Your file is being processed by our team."}</div>`
+const alertBox=p.pct===100
+  ?`<div style="background:#d4edda;border:1px solid #b2d8b2;border-radius:4px;padding:12px 16px;color:#155724;font-size:13px;font-weight:600;margin-top:12px">${c.stage==="Certified"?"✅ Your ICV certificate has been successfully issued.":"✅ All documents received! Your file is being processed by our team."}</div>`
     :pendMand>0
     ?`<div style="background:#fff3cd;border:1px solid #ffd966;border-radius:4px;padding:12px 16px;color:#856404;font-size:13px;margin-top:12px">⚠️ <b>${pendMand} mandatory document(s)</b> still pending. Please submit at your earliest convenience.</div>`
     :"";
@@ -1232,7 +1292,7 @@ const catRows=ICV_CATS.map(cat=>{
 // ════════════════════════════════════════
 function downloadSummary(c){
   ICV_DOCS.forEach(d=>{if(!c.documents[d.id])c.documents[d.id]={received:false,date:"",remarks:""};});
- const emiratiIds=[10,11,12,13,14,15];
+  const emiratiIds=[10,11,12,13,14,15];
 const hasEm=c.hasEmirati===true||c.hasEmirati==="true"||c.hasEmirati==="TRUE"||c.hasEmirati==="1";
 const p=getProg(c.documents,hasEm);
 const recvList=ICV_DOCS.filter(d=>
@@ -1246,7 +1306,7 @@ const pendMand=ICV_DOCS.filter(d=>
   const remList=ICV_DOCS.filter(d=>c.documents[d.id]&&c.documents[d.id].remarks);
   const now=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"});
 
-const catSections=ICV_CATS.map(cat=>{
+  const catSections=ICV_CATS.map(cat=>{
   if(cat.cat.includes("Emirati")&&!hasEm){
     return `<div style="margin-bottom:18px">
       <div style="background:#1d4a45;color:#fff;padding:8px 14px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase">${cat.cat}</div>
